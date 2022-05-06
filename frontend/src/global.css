@@ -1,0 +1,49 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  @apply bg-[#121212];
+}
+
+@layer base {
+  .custom-button-focus {
+    @apply transition-colors focus:outline-none focus:ring-2 focus:ring-brand-hover focus:ring-offset-2 focus:ring-offset-zinc-900;
+  }
+}
+
+@layer components {
+  .feedback-submit-button {
+    @apply flex flex-1 items-center justify-center rounded-[4px] border-transparent bg-brand-standard p-2 text-sm;
+    @apply custom-button-focus hover:bg-brand-hover;
+  }
+
+  .feedback-textarea {
+    @apply min-h-[112px] w-full min-w-[304ox] resize-none rounded-md border-[1px] border-zinc-600 bg-transparent text-sm text-zinc-100 placeholder-zinc-400;
+    @apply scrollbar-thin scrollbar-track-transparent scrollbar-thumb-zinc-700 focus:border-brand-standard focus:outline-none focus:ring-2 focus:ring-brand-standard;
+  }
+
+  .feedback-back-button {
+    @apply absolute top-5 left-5 text-darkTheme-textSecondary;
+    @apply hover:text-darkTheme-textPrimary focus:rounded-sm focus:border-2 focus:border-brand-hover focus:outline-none;
+  }
+
+  .feedback-type-button {
+    @apply flex w-24 flex-1 flex-col items-center gap-2 rounded-lg border-2 border-transparent bg-zinc-800 py-5;
+    @apply hover:border-brand-hover focus:border-brand-hover focus:outline-none;
+  }
+
+  .feedback-widget-form {
+    @apply relative mb-4 flex w-[calc(100vw-2rem)] flex-col items-center rounded-2xl bg-zinc-900 p-4 text-darkTheme-textPrimary sm:w-auto;
+  }
+
+  .feedback-widget-popover-button {
+    @apply flex h-12 items-center rounded-full bg-brand-standard px-3 text-brand-textOnBrandColor;
+    @apply transition-colors hover:bg-brand-hover focus:border-2 focus:border-darkTheme-tooltip focus:outline-none;
+  }
+
+  .feedback-screenshot-button {
+    @apply rounded-[4px] border-transparent bg-zinc-800 p-2 hover:bg-zinc-700;
+    @apply custom-button-focus;
+  }
+}
