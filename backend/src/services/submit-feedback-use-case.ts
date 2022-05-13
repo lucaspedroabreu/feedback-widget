@@ -20,7 +20,7 @@ export class SubmitFeedbackUseCase {
       throw new Error("Type & Comment are both required.");
     }
 
-    if (type !== ("BUG" || "IDEA" || "OTHER")) {
+    if (type !== "BUG" && type !== "IDEA" && type !== "OTHER") {
       throw new Error("Type must be one of ['BUG', 'IDEA', 'OTHER'] ");
     }
 
