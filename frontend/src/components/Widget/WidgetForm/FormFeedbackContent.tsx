@@ -1,6 +1,8 @@
 import { ArrowLeft, Camera } from 'phosphor-react'
 import { FormEvent, useState } from 'react'
 import { FeedbackType, feedbackTypes } from '.'
+import { api } from '../../../lib/api'
+import { Loading } from '../../Loading'
 import { CloseButton } from '../CloseButton'
 import { ScreenshotButton } from './ScreenshotButton'
 
@@ -13,27 +15,43 @@ interface FormFeedbackContentProps {
 export function FormFeedbackContent({ feedbackType, resetFeedback, onFeedbackSubmission }: FormFeedbackContentProps) {
   const [screenshot, setScreenshot] = useState<string | null>(null)
   const [feedbackComment, setFeedbackComment] = useState('')
+  const [isSendingFeedback, setIsSendingFeedback] = useState(false)
 
-  const feedbackObject = feedbackTypes[feedbackType]
+  const feedbackCategory = feedbackTypes[feedbackType]
 
-  function handleSubmitFeedback(event: FormEvent) {
+  async function handleSubmitFeedback(event: FormEvent) {
     event.preventDefault()
 
     console.log({
       screenshot,
       feedbackComment,
     })
+
+    try {
+      setIsSendingFeedback(true)
+      await api.post('/feedbacks/create', {
+        type: feedbackType,
+        comment: feedbackComment,
+        screenshot: screenshot,
+      })
+    } catch (error) {
+      setIsSendingFeedback(false)
+      console.warn(error)
+    } finally {
+      setIsSendingFeedback(false)
+      onFeedbackSubmission()
+    }
   }
 
   return (
     <>
       <header>
-        <button type="button" onClick={resetFeedback} className="feedback-back-button">
+        <button type="button" onClick={resetFeedback} className="feedback-back-button" disabled={isSendingFeedback}>
           <ArrowLeft weight="bold" className="h-4 w-4" />
         </button>
         <span className="flex items-center gap-2 text-xl leading-6">
-          <img src={feedbackObject.image.source} alt={feedbackObject.image.alt} className="h-6 w-6" />
-          {feedbackObject.title}
+          <img src={feedbackCategory.image.source} alt={feedbackCategory.image.alt} className="h-6 w-6" />
+          {feedbackCategory.title}
         </span>
 
         <CloseButton />
@@ -41,6 +59,8 @@ export function FormFeedbackContent({ feedbackType, resetFeedback, onFeedbackSub
 
       <form className="my-4 w-full" onSubmit={handleSubmitFeedback}>
         <textarea
+          contentEditable={!isSendingFeedback}
+          disabled={isSendingFeedback}
           className="feedback-textarea"
           placeholder="Conte em detalhes o que está acontecendo..."
           onChange={(event) => setFeedbackComment(event.target.value)}
@@ -51,11 +71,11 @@ export function FormFeedbackContent({ feedbackType, resetFeedback, onFeedbackSub
 
           <button
             type="submit"
-            onClick={onFeedbackSubmission}
+            onClick={handleSubmitFeedback}
             className="feedback-submit-button disabled:opacity-50 disabled:hover:bg-brand-standard"
-            disabled={feedbackComment.length === 0}
+            disabled={isSendingFeedback || feedbackComment.length === 0}
           >
-            Enviar Feedback
+            {isSendingFeedback ? <Loading /> : 'Enviar Feedback'}
           </button>
         </footer>
       </form>

@@ -5,9 +5,7 @@ interface FormFeedbackTypeProps {
   onFeedbackSelection: (type: FeedbackType) => void
 }
 
-export function FormFeedbackType({
-  onFeedbackSelection,
-}: FormFeedbackTypeProps) {
+export function FormFeedbackType({ onFeedbackSelection }: FormFeedbackTypeProps) {
   return (
     <>
       <header>
@@ -17,6 +15,7 @@ export function FormFeedbackType({
       </header>
       <div className="flex w-full gap-2 py-8">
         {Object.entries(feedbackTypes).map(([key, value]) => {
+          console.log(key, value)
           return (
             <button
               key={key}
